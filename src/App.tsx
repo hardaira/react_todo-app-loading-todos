@@ -130,15 +130,16 @@ export const App: React.FC = React.memo(() => {
             )}
           </div>
         </section>
-
-        <div>
-          <TodoFilter
-            todos={filteredTodos}
-            handleStatusChange={handleStatusChange}
-            status={status}
-            deleteThisTodo={deleteThisTodo}
-          />
-        </div>
+        {todos.length > 0 && (
+          <div>
+            <TodoFilter
+              todos={filteredTodos}
+              handleStatusChange={handleStatusChange}
+              status={status}
+              deleteThisTodo={deleteThisTodo}
+            />
+          </div>
+        )}
       </div>
 
       <div
