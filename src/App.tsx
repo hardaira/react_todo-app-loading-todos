@@ -7,6 +7,7 @@ import { getTodos, deleteTodo, createTodo, USER_ID } from './api/todos';
 import { TodoFilter } from './components/TodoFilter';
 import { Todo } from './types/Todo';
 import { TodoList } from './components/TodoList';
+import classNames from 'classnames';
 //import { debounce } from 'cypress/types/lodash';
 
 export const App: React.FC = React.memo(() => {
@@ -16,7 +17,7 @@ export const App: React.FC = React.memo(() => {
   const [status, setStatus] = useState<'all' | 'active' | 'completed'>('all');
   //const [isChecked, setIsChecked] = useState(false);
   //const [appliedQuery, setAppliedQuery] = useState('');
-  //const [errorMessage, setErrorMessage] = useState<string>('');
+  const [errorMessage, setErrorMessage] = useState<string>('');
   //const [tickPressed, setTickPressed] = useState(false);
 
   //const applyQuery = useCallback(
@@ -31,14 +32,15 @@ export const App: React.FC = React.memo(() => {
   function addTodo(event: React.FormEvent) {
     event.preventDefault();
     if (!query.trim()) {
-      return; // Prevent adding empty todos
+      return // Prevent adding empty todos
     }
 
     const newTodo: Todo = { userId: USER_ID, title: query, completed: false };
 
     createTodo(newTodo).then(newTodoFromApi => {
       setTodos(currentTodos => [...currentTodos, newTodoFromApi]);
-      setQuery(''); // Clear input after adding the todo
+      setQuery('');
+      setErrorMessage('');// Clear input after adding the todo
     });
   }
 
@@ -144,10 +146,12 @@ export const App: React.FC = React.memo(() => {
 
       <div
         data-cy="ErrorNotification"
-        className="notification is-danger is-light has-text-weight-normal"
-        style={{
-          visibility: 'hidden',
-        }}
+        className={classNames(
+          'notification is-danger is-light has-text-weight-normal',
+          {
+            hidden: !errorMessage,
+          },
+        )}
       >
         <button data-cy="HideErrorButton" type="button" className="delete" />
         Unable to load todos
